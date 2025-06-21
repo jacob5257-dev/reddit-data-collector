@@ -1,12 +1,12 @@
+import os
 import sys
+from datetime import datetime as dt  # imports datetime to deal with dates
 
-import praw # imports praw for reddit access
-import pandas as pd # imports pandas for data manipulation
-from datetime import datetime as dt # imports datetime to deal with dates
-from dotenv import load_dotenv # get login secrets
-import os, sys
+import pandas as pd  # imports pandas for data manipulation
+import praw  # imports praw for reddit access
+from dotenv import load_dotenv  # get login secrets
 
-load_dotenv() # gets secrets
+load_dotenv()  # gets secrets
 
 # log into reddit api
 reddit = praw.Reddit(client_id=os.getenv("CLIENT_ID"),
@@ -23,10 +23,12 @@ print(f"Logged in to Reddit as {os.getenv("REDDIT_USERNAME")}")
 
 # create a DataFrame to store posts
 # posted date in epoch, comments as list, everything else is a string
-posts = pd.DataFrame(columns=["Posted Time", "Title", "Author", "Link", "Comments"])
+posts = pd.DataFrame(
+    columns=["Posted Time", "Title", "Author", "Link", "Comments"])
 
 # list subreddits to search
-subreddits = ['cybersecurity']#, 'technology', 'k12sysadmin', 'toronto', 'canada', 'askTO', 'raleigh', 'linustechtips']
+# , 'technology', 'k12sysadmin', 'toronto', 'canada', 'askTO', 'raleigh', 'linustechtips']
+subreddits = ['cybersecurity']
 
 # look through every subreddit
 for subreddit_name in subreddits:
