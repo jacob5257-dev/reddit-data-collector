@@ -1,6 +1,8 @@
 import requests  # used to make http requests to ollama
 
 # runs an ollama prompt
+
+
 def call_ollama_api(prompt, model="gemma3:1b"):
     """
     Makes a request to a local ollama server to run an AI query.
@@ -25,6 +27,7 @@ def call_ollama_api(prompt, model="gemma3:1b"):
     except requests.exceptions.RequestException as e:
         print(f"Error making request: {e}")
         return None
+
 
 # Usage
 result = call_ollama_api(
