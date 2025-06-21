@@ -1,10 +1,8 @@
 import praw # imports praw for reddit access
 import pandas as pd # imports pandas for data manipulation
-import numpy as np # imports numpy to manipulate data
 from datetime import datetime as dt # imports datetime to deal with dates
 from dotenv import load_dotenv # get login secrets
 import os
-from sys import exit
 
 load_dotenv()  # gets secrets
 
@@ -23,11 +21,23 @@ print(f"Logged in to Reddit as {os.getenv("REDDIT_USERNAME")}")
 
 # create a DataFrame to store posts
 # posted date in epoch, comments as list, everything else is a string
-posts = pd.DataFrame(columns=["Posted Time", "Title", "Author", "Link", "Content", "Comments"])
+posts = pd.DataFrame(columns=["Posted Time",
+                              "Title",
+                              "Author",
+                              "Link",
+                              "Content",
+                              "Comments"])
 
 # list subreddits to search
 # set subreddits = ["all"] to search all of reddit
-subreddits = ['cybersecurity', 'technology', 'k12sysadmin', 'toronto', 'canada', 'askTO', 'raleigh', 'linustechtips']
+subreddits = ['cybersecurity',
+              'technology',
+              'k12sysadmin',
+              'toronto',
+              'canada',
+              'askTO',
+              'raleigh',
+              'linustechtips']
 
 # look through every subreddit
 for subreddit_name in subreddits:
@@ -36,7 +46,7 @@ for subreddit_name in subreddits:
     # get the messages that meet a query (the same as the search bar)
     # sorts by recency and gets only messages from the most recent year
     # change limit to the most appropriate limit
-    for submission in subreddit.search("powerschool", sort="new", time_filter="year", limit=100):
+    for submission in subreddit.search("powerschool", sort="new", time_filter="year", limit=100): #skipcq: FLK-E501
         # check the time of the post
         # 12/28/2024, the date of the breach, in epoch time
         breach_time = 1735344000
@@ -49,7 +59,12 @@ for subreddit_name in subreddits:
         link = f"https://www.reddit.com/r/{subreddit}/comments/{submission.id}/"
 
         # collects the data necessary, replaces newlines with spaces because they are easier to work with
-        data = [time, submission.title, submission.author.name, link, submission.selftext.replace("\n", " "), submission.comments.list()]
+        data = [time,
+                submission.title,
+                submission.author.name,
+                link,
+                submission.selftext.replace("\n", " "),
+                submission.comments.list()]
         # adds the data to the dataframe
         posts.loc[len(posts)] = data
 
@@ -58,7 +73,9 @@ num_comments = 0
 for comment_list in posts["Comments"]:
     # update num_comments to be the number of comments if it's longer than the one before
     # otherwise, keep it the same
-    num_comments = (len(comment_list) if len(comment_list) > num_comments else num_comments)
+    num_comments = (len(comment_list)
+                    if len(comment_list) > num_comments
+                    else num_comments)
 
 comments = pd.DataFrame(
     columns=[f"Comment{i}" for i in range(1, num_comments + 1)]
