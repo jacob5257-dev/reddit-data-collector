@@ -1,22 +1,23 @@
-import praw # imports praw for reddit access
-import pandas as pd # imports pandas for data manipulation
-from datetime import datetime as dt # imports datetime to deal with dates
-from dotenv import load_dotenv # get login secrets
+from datetime import datetime as dt  # imports datetime to deal with dates
 import os
+import sys
+import praw  # imports praw for reddit access
+import pandas as pd  # imports pandas for data manipulation
+from dotenv import load_dotenv  # get login secrets
 
 load_dotenv()  # gets secrets
 
 # log into reddit api
 reddit = praw.Reddit(client_id=os.getenv("CLIENT_ID"),
                      client_secret=os.getenv("CLIENT_SECRET"),
-                     user_agent='reddit data collector for u/Delicious-Corner6100',
+                     user_agent='data collector for u/Delicious-Corner6100',
                      username=os.getenv("REDDIT_USERNAME"),
                      password=os.getenv("REDDIT_PASSWORD"))
 
 # make sure that we are logged in correctly
 if reddit.user.me() != os.getenv("REDDIT_USERNAME"):
     print("Failed to log in to Reddit :(")
-    exit(1)
+    sys.exit(1)
 print(f"Logged in to Reddit as {os.getenv("REDDIT_USERNAME")}")
 
 # create a DataFrame to store posts
@@ -46,37 +47,37 @@ for subreddit_name in subreddits:
     # get the messages that meet a query (the same as the search bar)
     # sorts by recency and gets only messages from the most recent year
     # change limit to the most appropriate limit
-    for submission in subreddit.search("powerschool", sort="new", time_filter="year", limit=100): #skipcq: FLK-E501
+    for post in subreddit.search("powerschool", sort="new", time_filter="year", limit=100):  # skipcq: FLK-E501
         # check the time of the post
         # 12/28/2024, the date of the breach, in epoch time
         breach_time = 1735344000
-        if submission.created_utc <= breach_time:
+        if post.created_utc <= breach_time:
             # do not process comments if they occur after the breach
             continue
-        time = dt.fromtimestamp(submission.created_utc)
+        time = dt.fromtimestamp(post.created_utc)
 
         # gets the link so we can review the post
-        link = f"https://www.reddit.com/r/{subreddit}/comments/{submission.id}/"
+        link = f"https://www.reddit.com/r/{subreddit}/comments/{post.id}/"
 
-        # collects the data necessary, replaces newlines with spaces because they are easier to work with
+        # collects the data necessary
+        # replace newlines with spaces because they are easier to work with
         data = [time,
-                submission.title,
-                submission.author.name,
+                post.title,
+                post.author.name,
                 link,
-                submission.selftext.replace("\n", " "),
-                submission.comments.list()]
+                post.selftext.replace("\n", " "),
+                post.comments.list()]
         # adds the data to the dataframe
         posts.loc[len(posts)] = data
 
-# find the post with the most amount of comments and create those columns in the dataframe
+# find the post with the most amount of comments
 num_comments = 0
 for comment_list in posts["Comments"]:
-    # update num_comments to be the number of comments if it's longer than the one before
-    # otherwise, keep it the same
     num_comments = (len(comment_list)
                     if len(comment_list) > num_comments
                     else num_comments)
 
+# create columns in the dataframe
 comments = pd.DataFrame(
     columns=[f"Comment{i}" for i in range(1, num_comments + 1)]
 )
