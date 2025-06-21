@@ -33,14 +33,14 @@ posts = pd.DataFrame(columns=["Posted Time",
 # list subreddits to search
 # set subreddits = ["all"] to search all of reddit
 subreddits = ['cybersecurity',
-#              'technology',
-#              'k12sysadmin',
-#              'toronto',
-#              'canada',
-#              'askTO',
-#              'raleigh',
-#              'linustechtips']
-]
+              'technology',
+              'k12sysadmin',
+              'toronto',
+              'canada',
+              'askTO',
+              'raleigh',
+              'linustechtips']
+
 # look through every subreddit
 for subreddit_name in subreddits:
     # get the subreddit via api
