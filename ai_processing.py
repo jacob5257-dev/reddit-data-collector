@@ -33,7 +33,8 @@ posts = pd.read_csv("posts.csv")
 # get the number of comments
 num_comments = int(posts.columns[-1][7:])
 
-column_names = [f"Comment{i}" for i in range(1, num_comments + 1)] + ["Content"]
+column_names = [f"Comment{i}" for i in range(
+    1, num_comments + 1)] + ["Content"]
 
 # get all quotes into a list
 quotes = posts[column_names].values.flatten().tolist()
