@@ -1,7 +1,9 @@
 # Virtual environment
 reddit-venv
-# Results file
-posts.csv
+# Results files
+*.csv
+# Testing files
+test.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
