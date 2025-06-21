@@ -6,7 +6,7 @@ from dotenv import load_dotenv # get login secrets
 import os
 from sys import exit
 
-load_dotenv() # gets secrets
+load_dotenv()  # gets secrets
 
 # log into reddit api
 reddit = praw.Reddit(client_id=os.getenv("CLIENT_ID"),
