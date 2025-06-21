@@ -1,8 +1,9 @@
-from datetime import datetime as dt  # imports datetime to deal with dates
 import os
 import sys
-import praw  # imports praw for reddit access
+from datetime import datetime as dt  # imports datetime to deal with dates
+
 import pandas as pd  # imports pandas for data manipulation
+import praw  # imports praw for reddit access
 from dotenv import load_dotenv  # get login secrets
 
 load_dotenv()  # gets secrets
@@ -47,7 +48,8 @@ for subreddit_name in subreddits:
     # get the messages that meet a query (the same as the search bar)
     # sorts by recency and gets only messages from the most recent year
     # change limit to the most appropriate limit
-    for post in subreddit.search("powerschool", sort="new", time_filter="year", limit=100):  # skipcq: FLK-E501
+    # skipcq: FLK-E501
+    for post in subreddit.search("powerschool", sort="new", time_filter="year", limit=100):
         # check the time of the post
         # 12/28/2024, the date of the breach, in epoch time
         breach_time = 1735344000
