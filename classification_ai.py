@@ -1,11 +1,13 @@
-import tensorflow as tf
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 
 comments_table = pd.read_csv("comments.csv")
 testing_comments_table = pd.read_csv("test_data.csv")
-train_comments_list_raw, train_roles_list_raw = comments_table["Content"].tolist(), comments_table["Person's Role"].tolist()
-test_comments_list_raw, test_roles_list_raw = testing_comments_table["comment"].tolist(), testing_comments_table["role"].tolist()
+train_comments_list_raw, train_roles_list_raw = comments_table["Content"].tolist(
+), comments_table["Person's Role"].tolist()
+test_comments_list_raw, test_roles_list_raw = testing_comments_table["comment"].tolist(
+), testing_comments_table["role"].tolist()
 
 
 # --- 1. Data Preparation Function (from previous response, no change needed here) ---
@@ -84,7 +86,8 @@ test_roles_list = [str(r) for r in test_roles_list_raw]
 
 print("--- Cleaned Lists (all strings) ---")
 print("Train Comments Cleaned (first 2):", train_comments_list[:2])
-print("Test Comments Cleaned:", test_comments_list)  # Will show '' instead of nan
+# Will show '' instead of nan
+print("Test Comments Cleaned:", test_comments_list)
 print("-" * 20)
 
 # Set parameters for the data preparation
@@ -119,7 +122,8 @@ model = tf.keras.Sequential([
         output_dim=EMBEDDING_DIM,
         input_length=MAX_LENGTH
     ),
-    tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, return_sequences=True)),
+    tf.keras.layers.Bidirectional(
+        tf.keras.layers.LSTM(64, return_sequences=True)),
     tf.keras.layers.Dropout(0.3),
     tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32)),
     tf.keras.layers.Dropout(0.3),
@@ -172,7 +176,8 @@ print(f"Test Accuracy: {accuracy:.4f}")
 def predict_role(comment_text):
     # Ensure the input comment is a string before tokenizing
     if not isinstance(comment_text, str):
-        comment_text = str(comment_text)  # Convert any non-string input to string
+        # Convert any non-string input to string
+        comment_text = str(comment_text)
 
     sequence = tokenizer.texts_to_sequences([comment_text])
     padded_sequence = tf.keras.preprocessing.sequence.pad_sequences(
