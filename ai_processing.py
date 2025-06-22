@@ -3,10 +3,10 @@ from time import sleep
 
 import pandas as pd
 import requests  # used to make http requests to ollama
-from tqdm import tqdm  # used to show progress of ai
+from dotenv import load_dotenv  # gets secret stores
 from google import genai  # google ai package
 from google.api_core import exceptions
-from dotenv import load_dotenv  # gets secret stores
+from tqdm import tqdm  # used to show progress of ai
 
 load_dotenv()
 

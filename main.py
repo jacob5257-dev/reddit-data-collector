@@ -4,8 +4,8 @@ from datetime import datetime as dt  # imports datetime to deal with dates
 
 import pandas as pd  # imports pandas for data manipulation
 import praw  # imports praw for reddit access
-from praw.models import MoreComments
 from dotenv import load_dotenv  # get login secrets
+from praw.models import MoreComments
 from tqdm import tqdm  # show progress bars
 
 load_dotenv()  # gets secrets
