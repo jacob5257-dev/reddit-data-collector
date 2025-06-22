@@ -3,7 +3,7 @@ reddit-venv
 # Results files
 *.csv
 # Testing files
-test.ipynb
+*.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
