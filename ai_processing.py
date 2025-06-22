@@ -32,9 +32,8 @@ def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
         response = requests.post(url, json=data)
         response.raise_for_status()  # Raises an HTTPError for bad responses
         return response.json()
-    except exceptions.ResourceExhausted as e:
-        print(f"API limit reached. Taking a break for a few seconds...")
-        sleep(15)
+    except requests.exceptions.RequestException as e:
+        print(f"Error making request: {e}")
         return None
 
 
@@ -58,7 +57,7 @@ def call_google_api(prompt, model="gemma3", api_key=os.getenv("GOOGLE_API_KEY"))
 
         return response.text
     except exceptions.ResourceExhausted as e:
-        print(f"API limit reached. Taking a break for a few seconds...")
+        print(f"{e}\nAPI limit reached. Taking a break for a few seconds...")
         sleep(15)
         return None
 

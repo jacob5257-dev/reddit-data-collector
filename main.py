@@ -97,6 +97,7 @@ for subreddit_name in subreddits:
         time = dt.fromtimestamp(post.created_utc)
 
         # gets the link so we can review the post
+        # skipcq FLK-E501
         link = f"https://www.reddit.com/r/{post.subreddit.display_name}/comments/{post.id}/"
 
         # collects the data necessary
