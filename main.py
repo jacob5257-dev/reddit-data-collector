@@ -5,6 +5,7 @@ from datetime import datetime as dt  # imports datetime to deal with dates
 import pandas as pd  # imports pandas for data manipulation
 import praw  # imports praw for reddit access
 from dotenv import load_dotenv  # get login secrets
+from tqdm import tqdm  # show progress bars
 
 load_dotenv()  # gets secrets
 
@@ -48,8 +49,12 @@ for subreddit_name in subreddits:
     # get the messages that meet a query (the same as the search bar)
     # sorts by recency and gets only messages from the most recent year
     # change limit to the most appropriate limit
-    # skipcq: FLK-E501
-    for post in subreddit.search("powerschool", sort="new", time_filter="year", limit=100):
+    # tqdm shows progress bar
+    for post in tqdm(subreddit.search("powerschool",
+                                      sort="new",
+                                      time_filter="year",
+                                      limit=100),
+                     desc=f"r/{subreddit} progress"):
         # check the time of the post
         # 12/28/2024, the date of the breach, in epoch time
         breach_time = 1735344000
@@ -99,7 +104,6 @@ for comment_list in posts["Comments"]:
 res = pd.concat([posts, comments], axis=1)
 # delete the list of comments because they have been converted to strings
 res = res.drop("Comments", axis=1)
-
 
 # write the final dataframe to a csv
 res.to_csv("posts.csv")

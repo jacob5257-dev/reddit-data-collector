@@ -1,8 +1,9 @@
 import pandas as pd
 import requests  # used to make http requests to ollama
+from tqdm import tqdm  # used to show progress of ai
 
 
-def call_ollama_api(prompt, model="gemma3"):
+def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
     """
     Makes a request to a local ollama server to run an AI query.
     :param prompt: String - the query for the AI.
@@ -42,13 +43,14 @@ quotes = posts[column_names].values.flatten().tolist()
 quotes = [x for x in quotes if (type(x) is str and x != '[removed]')]
 
 results = []
-for quote in quotes:
-
+for quote in tqdm(quotes, desc="AI Progress"):
     # call the ollama api to determine role
     result = call_ollama_api(
         prompt="The following is a quote regarding the PowerSchool data breach. "
                "Determine whether the person who posted it was a parent, former student, teacher, or district administrator. "
-               "Answer with one word, either parent, student, teacher, admin, or none. Quote: "
+               "Answer with one word, either parent, student, teacher, admin, or none. "
+               "If you are unsure, put none. "
+               "Quote: "
                f"{quote}"
     )
 
