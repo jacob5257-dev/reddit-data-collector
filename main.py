@@ -86,7 +86,7 @@ for subreddit_name in subreddits:
     for post in tqdm(subreddit.search("powerschool data breach",
                                       sort="relevance",
                                       time_filter="year",
-                                      limit=2),
+                                      limit=10),
                      desc=f"r/{subreddit} progress"):
         # check the time of the post
         # 12/28/2024, the date of the breach, in epoch time

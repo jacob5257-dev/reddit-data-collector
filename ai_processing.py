@@ -73,7 +73,7 @@ column_names = [f"Comment{i}"
 # get all quotes into a list
 quotes = posts[column_names].values.flatten().tolist()
 # remove any empty values or comments that were deleted
-quotes = [x for x in quotes if (type(x) is str and x != '[removed]')]
+quotes = [x for x in quotes if (type(x) is str and x != '[deleted]')]
 
 results = []
 for quote in tqdm(quotes, desc="AI Progress"):
