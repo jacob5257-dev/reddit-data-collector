@@ -5,13 +5,16 @@ import pandas as pd
 import requests  # used to make http requests to ollama
 from dotenv import load_dotenv  # gets secret stores
 from google import genai  # google ai package
+from google.ai.generativelanguage_v1 import GenerateContentResponse
 from google.api_core import exceptions
-from tqdm import tqdm  # used to show progress of ai
+from google.genai import Client
+from requests import Response
+from tqdm import tqdm  # used to show progress of AI
 
 load_dotenv()
 
 
-def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
+def call_ollama_api(prompt: str, model: str = "gemma3:12b") -> dict[str, str] | None:
     """
     Makes a request to a local ollama server to run an AI query.
     :param prompt: String - the query for the AI.
@@ -19,9 +22,9 @@ def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
     :return: A JSON object with response data from the API.
     """
     # url of the server
-    url = "http://jacobs-ubuntu:11434/api/generate"
+    url: str = "http://jacobs-ubuntu:11434/api/generate"
 
-    data = {
+    data: dict[str, str | bool] = {
         "model": model,
         "prompt": prompt,
         "stream": False
@@ -29,7 +32,7 @@ def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
 
     try:
         # makes a request to the ollama server
-        response = requests.post(url, json=data)
+        response: Response = requests.post(url, json=data)
         response.raise_for_status()  # Raises an HTTPError for bad responses
         return response.json()
     except requests.exceptions.RequestException as e:
@@ -37,20 +40,20 @@ def call_ollama_api(prompt, model="gemma3:4b-it-qat"):
         return None
 
 
-def call_google_api(prompt, model="gemma3", api_key=os.getenv("GOOGLE_API_KEY")):
+def call_google_api(prompt: str, model: str = "gemma3", api_key: str = os.getenv("GOOGLE_API_KEY")) -> dict[str, str] | None:
     """
-    Calls the google/gemini api to get their ai's answers
-    :param prompt: The prompt to ask the ai
-    :param model: Which ai model to ask - default is gemma 3
+    Calls the Google/Gemini api to get their AI's answers
+    :param prompt: The prompt to ask the AI
+    :param model: Which AI model to ask - default is gemma 3
     :param api_key: Google api key
-    :return: String response of the ai
+    :return: String response of the AI
     """
     # get google gen ai client object
-    client = genai.Client(api_key=api_key)
+    client: Client = genai.Client(api_key=api_key)
 
     try:
         # get response from api and return it
-        response = client.models.generate_content(
+        response: GenerateContentResponse = client.models.generate_content(
             model=model,
             contents=prompt,
         )
@@ -63,24 +66,26 @@ def call_google_api(prompt, model="gemma3", api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 # open file with comments
-posts = pd.read_csv("posts.csv")
+posts: pd.DataFrame = pd.read_csv("posts.csv")
 # get the number of comments
-num_comments = int(posts.columns[-1][7:])
+num_comments: int = int(posts.columns[-1][7:])
 
-column_names = [f"Comment{i}"
+column_names: list[str] = [f"Comment{i}"
                 for i in range(1, num_comments + 1)] + ["Content"]
 
 # get all quotes into a list
-quotes = posts[column_names].values.flatten().tolist()
+quotes: list[str] = posts[column_names].values.flatten().tolist()[:20]
 # remove any empty values or comments that were deleted
 quotes = [x for x in quotes if (type(x) is str and x != '[deleted]')]
 
-results = []
+results: list[str] = []
 for quote in tqdm(quotes, desc="AI Progress"):
     # call the ollama api to determine role
-    result = call_ollama_api(
+    result: dict[str, str] | None = call_ollama_api(
         prompt="Read the following message about the PowerSchool data breach and determine the role of the person who wrote it. "
-               "Respond with only one word from the following list: parent, student, teacher, admin, general, or unsure. "
+               "The author has one of the following roles: parent, student, teacher, admin, general. "
+               "Walk me through how you determined their role. "
+               "Provide an explanation for why you chose the role for that message. "
                "If you are not more than 50% confident in your classification, respond with unsure. "
                "Parents generally talk about their children, using words such as 'my son', 'my daughter', 'my child(ren)', etc. "
                "They also mention receiving messages from school boards about the data breach. "
@@ -98,7 +103,7 @@ for quote in tqdm(quotes, desc="AI Progress"):
         results.append(result["response"])
 
 # put the quote to the role and save as csv
-out = pd.DataFrame({
+out: pd.DataFrame = pd.DataFrame({
     "quote": quotes,
     "role": results
 })
