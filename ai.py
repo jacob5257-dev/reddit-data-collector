@@ -7,6 +7,7 @@ from google.api_core import exceptions
 from google.genai import Client
 from openai import OpenAI
 
+
 def ollama_ai(prompt: str, model: str = "gemma3:12b") -> str | None:
     """
     Makes a request to a local ollama server to run an AI query.

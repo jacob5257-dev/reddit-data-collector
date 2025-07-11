@@ -6,14 +6,14 @@ import pandas as pd  # imports pandas for data manipulation
 import praw  # imports praw for reddit access
 from dotenv import load_dotenv  # get login secrets
 from praw import Reddit
-from praw.models import MoreComments, Comment, Subreddit
+from praw.models import Comment, MoreComments, Subreddit
 from tqdm import tqdm  # show progress bars
 
 load_dotenv()  # gets secrets
 
 
 # helper function to get all comments from a post
-def get_all_comments(comments_list: list[Comment], limit: int=None) -> list[str]:
+def get_all_comments(comments_list: list[Comment], limit: int = None) -> list[str]:
     """
     Gets all comments from a list, even if there are MoreComments
     :param comments_list: The list of comments
@@ -50,10 +50,10 @@ def get_all_comments(comments_list: list[Comment], limit: int=None) -> list[str]
 
 # log into reddit api
 reddit: Reddit = praw.Reddit(client_id=os.getenv("CLIENT_ID"),
-                     client_secret=os.getenv("CLIENT_SECRET"),
-                     user_agent='data collector for u/Delicious-Corner6100',
-                     username=os.getenv("REDDIT_USERNAME"),
-                     password=os.getenv("REDDIT_PASSWORD"))
+                             client_secret=os.getenv("CLIENT_SECRET"),
+                             user_agent='data collector for u/Delicious-Corner6100',
+                             username=os.getenv("REDDIT_USERNAME"),
+                             password=os.getenv("REDDIT_PASSWORD"))
 
 # make sure that we are logged in correctly
 if reddit.user.me() != os.getenv("REDDIT_USERNAME"):
@@ -64,11 +64,11 @@ print(f"Logged in to Reddit as {os.getenv("REDDIT_USERNAME")}")
 # create a DataFrame to store posts
 # posted date in epoch, comments as list, everything else is a string
 posts: pd.DataFrame = pd.DataFrame(columns=["Posted Time",
-                              "Title",
-                              "Author",
-                              "Link",
-                              "Content",
-                              "Comments"])
+                                            "Title",
+                                            "Author",
+                                            "Link",
+                                            "Content",
+                                            "Comments"])
 
 # list subreddits to search
 # set subreddits = ["all"] to search all of reddit
@@ -123,8 +123,8 @@ for comment_list in tqdm(posts["Comments"], desc="Expanding MoreComments"):
 num_comments: int = 0
 for expanded_comment_list in expanded_comments_lists:
     num_comments: int = (len(expanded_comment_list)
-                    if len(expanded_comment_list) > num_comments
-                    else num_comments)
+                         if len(expanded_comment_list) > num_comments
+                         else num_comments)
 
 # Create columns in the dataframe based on the actual expanded comment counts
 comments: pd.DataFrame = pd.DataFrame(
