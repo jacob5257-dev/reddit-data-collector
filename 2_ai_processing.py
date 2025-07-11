@@ -1,9 +1,10 @@
 import os
+import random
 
 import pandas as pd
 from dotenv import load_dotenv  # gets secret stores
 from tqdm import tqdm  # used to show progress of AI
-import random
+
 from ai import openai_ai
 
 load_dotenv()
@@ -14,7 +15,7 @@ posts: pd.DataFrame = pd.read_csv("posts.csv")
 num_comments: int = int(posts.columns[-1][7:])
 
 column_names: list[str] = [f"Comment{i}"
-                for i in range(1, num_comments + 1)] + ["Content"]
+                           for i in range(1, num_comments + 1)] + ["Content"]
 
 # get all quotes into a list
 quotes: list[str] = posts[column_names].values.flatten().tolist()

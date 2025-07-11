@@ -1,9 +1,10 @@
+import os
+
+import pandas as pd
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 from ai import openai_ai
-from tqdm import tqdm
-import pandas as pd
-import os
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ quotes: list[str] = posts["quote"].values.flatten().tolist()
 responses: list[str] = []
 
 for quote in tqdm(quotes, desc="AI Progress"):
-    #ai_response: str | None = openai_ai(
+    # ai_response: str | None = openai_ai(
     #    prompt="Below is a quote about the PowerSchool data breach. "
     #           "Label the data based on what was included. "
     #           "For example, if the author of the message complained about the delay in notification, you can label the message as 'lack of communication'. "
@@ -23,7 +24,7 @@ for quote in tqdm(quotes, desc="AI Progress"):
     #           "You can label messages with as many labels as necessary and you may generate as many labels as you need. "
     #           f"Message: {quote}",
     #    api_key=os.getenv("OPENAI_API_KEY")
-    #)
+    # )
 
     ai_response: str | None = openai_ai(
         prompt="Below is a quote about the PowerSchool data breach. "
