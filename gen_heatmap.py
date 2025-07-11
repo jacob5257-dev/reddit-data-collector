@@ -1,8 +1,9 @@
+from collections import Counter, defaultdict
+from itertools import combinations
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-from itertools import combinations
-from collections import Counter, defaultdict
 
 # Example input: list of strings with newline-separated labels (possibly with extra whitespace)
 data = pd.read_csv("cleaned_file.csv")["labels"]
@@ -37,7 +38,8 @@ for (a, b), count in co_counts.items():
 
 # Plot heatmap
 plt.figure(figsize=(10, 8))
-sns.heatmap(co_matrix, annot=True, fmt='d', cmap='YlGnBu', square=True, cbar_kws={'label': 'Co-occurrence'})
+sns.heatmap(co_matrix, annot=True, fmt='d', cmap='YlGnBu',
+            square=True, cbar_kws={'label': 'Co-occurrence'})
 plt.title("Label Co-occurrence Heatmap")
 plt.xticks(rotation=45, ha='right')
 plt.tight_layout()
