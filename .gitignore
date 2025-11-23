@@ -2,8 +2,6 @@
 reddit-venv
 # Results files
 *.csv
-# Testing files
-*.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
